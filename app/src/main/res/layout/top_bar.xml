@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@mipmap/navbar_bg"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="fill_parent"
+        android:layout_weight="216"/>
+
+    <ImageButton
+        android:id="@+id/btn_alarm"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_weight="46"
+        android:layout_gravity="center"
+        android:background="@mipmap/home"/>
+
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="fill_parent"
+        android:layout_weight="554"/>
+
+
+    <ImageButton
+        android:id="@+id/btn_new"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_weight="48"
+        android:layout_gravity="center"
+        android:background="@mipmap/recent"/>
+
+    <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="fill_parent"
+        android:layout_weight="216"/>
+
+
+
+    <!--<ImageButton-->
+    <!--android:id="@+id/btn_top_02"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_width="38dp"-->
+    <!--android:layout_height="38dp"-->
+    <!--android:background="@mipmap/recent"/>-->
+
+</LinearLayout>
