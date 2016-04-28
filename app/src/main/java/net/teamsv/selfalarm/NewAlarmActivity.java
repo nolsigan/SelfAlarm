@@ -46,6 +46,16 @@ public class NewAlarmActivity extends Activity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (realm != null) {
+            realm.close();
+            realm = null;
+        }
+    }
+
+
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -58,7 +68,10 @@ public class NewAlarmActivity extends Activity {
                     Alarm newAlarm = realm.createObject(Alarm.class);
                     newAlarm.setTime(hour, minute);
                     newAlarm.setOnoff(true);
+                    newAlarm.setId(System.currentTimeMillis());
                     realm.commitTransaction();
+
+                    finish();
 
                     break;
 

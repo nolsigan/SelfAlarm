@@ -16,9 +16,9 @@ import net.teamsv.selfalarm.database.Alarm;
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
 import io.realm.RealmBasedRecyclerViewAdapter;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.RealmViewHolder;
+import io.realm.Sort;
 
 public class MyAlarmsActivity extends Activity {
 
@@ -32,11 +32,11 @@ public class MyAlarmsActivity extends Activity {
         setContentView(R.layout.activity_my_alarms);
 
         /* realm setting */
-        resetRealm();
+
         realm = Realm.getInstance(this);
         RealmResults<Alarm> alarms = realm
                 .where(Alarm.class)
-                .findAll();
+                .findAllSorted("id", Sort.ASCENDING);
 
         RealmAdapter realmAdapter = new RealmAdapter(this, alarms, true, true);
         RealmRecyclerView realmRecyclerView = (RealmRecyclerView) findViewById(R.id.realm_recycler_view);
@@ -50,6 +50,16 @@ public class MyAlarmsActivity extends Activity {
         newButton.setOnClickListener(mOnClickListener);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (realm != null) {
+            realm.close();
+            realm = null;
+        }
+    }
+
+
     public class RealmAdapter extends RealmBasedRecyclerViewAdapter<Alarm, RealmAdapter.ViewHolder> {
 
         public class ViewHolder extends RealmViewHolder {
@@ -62,6 +72,7 @@ public class MyAlarmsActivity extends Activity {
                 this.alarmTime = (TextView) container.findViewById(R.id.list_time);
                 this.tButton = (ToggleButton) container.findViewById(R.id.list_switch);
             }
+
         }
 
         public RealmAdapter(
@@ -84,9 +95,28 @@ public class MyAlarmsActivity extends Activity {
         public void onBindRealmViewHolder(ViewHolder viewHolder, int pos) {
             final Alarm alarm = realmResults.get(pos);
             final String strDate = alarm.getTime();
+            final ToggleButton tButton = viewHolder.tButton;
 
             viewHolder.alarmTime.setText(strDate);
             viewHolder.tButton.setChecked(alarm.getOnoff());
+
+            viewHolder.tButton.setOnClickListener(new View.OnClickListener() {
+
+                public void onClick(View v) {
+
+                    if (tButton.isChecked()) {
+
+                        realm.beginTransaction();
+                        alarm.setOnoff(true);
+                        realm.commitTransaction();
+                    } else {
+
+                        realm.beginTransaction();
+                        alarm.setOnoff(false);
+                        realm.commitTransaction();
+                    }
+                }
+            });
         }
 
     }
@@ -95,26 +125,18 @@ public class MyAlarmsActivity extends Activity {
         public void onClick(View v) {
 
             switch (v.getId()) {
-                case R.id.btn_new:
-
+                case R.id.btn_new: {
                     Intent intent = new Intent(MyAlarmsActivity.this, NewAlarmActivity.class);
 
                     startActivity(intent);
                     break;
-
-                case R.id.btn_record:
+                }
+                case R.id.btn_record: {
                     // TODO : intent to new record activity
                     break;
+                }
             }
         }
     };
-
-    private void resetRealm() {
-        RealmConfiguration realmConfig = new RealmConfiguration
-                .Builder(this)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.deleteRealm(realmConfig);
-    }
 
 }
