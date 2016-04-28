@@ -10,7 +10,7 @@
         android:layout_weight="216"/>
 
     <ImageButton
-        android:id="@+id/btn_alarm"
+        android:id="@+id/btn_record"
         android:layout_width="0px"
         android:layout_height="wrap_content"
         android:layout_weight="46"

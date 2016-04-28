@@ -3,122 +3,118 @@ package net.teamsv.selfalarm;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import java.util.ArrayList;
+import net.teamsv.selfalarm.database.Alarm;
+
+import java.text.SimpleDateFormat;
+
+import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
+import io.realm.Realm;
+import io.realm.RealmBasedRecyclerViewAdapter;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
+import io.realm.RealmViewHolder;
 
 public class MyAlarmsActivity extends Activity {
 
-    private ListView mListView = null;
-    private ListAdapter mAdapter = null;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         /* Set View */
-
         setContentView(R.layout.activity_my_alarms);
 
-        mListView = (ListView) findViewById(R.id.alarm_list);
+        /* realm setting */
+        resetRealm();
+        realm = Realm.getInstance(this);
+        RealmResults<Alarm> alarms = realm
+                .where(Alarm.class)
+                .findAll();
 
-        mAdapter = new ListViewAdapter(this);
-        mListView.setAdapter(mAdapter);
+        RealmAdapter realmAdapter = new RealmAdapter(this, alarms, true, true);
+        RealmRecyclerView realmRecyclerView = (RealmRecyclerView) findViewById(R.id.realm_recycler_view);
+        realmRecyclerView.setAdapter(realmAdapter);
 
+        /* Button Click Listeners */
+        ImageButton recordButton = (ImageButton) findViewById(R.id.btn_record);
+        ImageButton newButton = (ImageButton) findViewById(R.id.btn_new);
 
-        /* Set click listener */
+        recordButton.setOnClickListener(mOnClickListener);
+        newButton.setOnClickListener(mOnClickListener);
+    }
 
-        ImageButton addButton = (ImageButton) findViewById(R.id.btn_new);
-        ImageButton recordButton = (ImageButton) findViewById(R.id.btn_alarm);
+    public class RealmAdapter extends RealmBasedRecyclerViewAdapter<Alarm, RealmAdapter.ViewHolder> {
 
-        addButton.setOnClickListener(mOnClickListener);
-        addButton.setOnClickListener(mOnClickListener);
+        public class ViewHolder extends RealmViewHolder {
+
+            public TextView alarmTime;
+            public ToggleButton tButton;
+
+            public ViewHolder(FrameLayout container) {
+                super(container);
+                this.alarmTime = (TextView) container.findViewById(R.id.list_time);
+                this.tButton = (ToggleButton) container.findViewById(R.id.list_switch);
+            }
+        }
+
+        public RealmAdapter(
+                Context context,
+                RealmResults<Alarm> realmResults,
+                boolean automaticUpdate,
+                boolean animateResults) {
+            super(context, realmResults, automaticUpdate, animateResults);
+        }
+
+        @Override
+        public ViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int viewType) {
+            View v = inflater.inflate(R.layout.list_alarms, viewGroup, false);
+            ViewHolder vh = new ViewHolder((FrameLayout) v);
+
+            return vh;
+        }
+
+        @Override
+        public void onBindRealmViewHolder(ViewHolder viewHolder, int pos) {
+            final Alarm alarm = realmResults.get(pos);
+
+            SimpleDateFormat transFormat = new SimpleDateFormat("MM-dd HH:mm");
+            final String strDate = transFormat.format(alarm.getDate());
+
+            viewHolder.alarmTime.setText(strDate);
+            viewHolder.tButton.setChecked(alarm.getOnoff());
+        }
+
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
         public void onClick(View v) {
 
             switch (v.getId()) {
-                case R.id.btn_new :
-                    // TODO : Intent to new alarm activity
+                case R.id.btn_new:
+                    // TODO : intent to new alarm activity
                     break;
 
-                case R.id.btn_alarm :
-                    // TODO : Intent to new record activity
+                case R.id.btn_record:
+                    // TODO : intent to new record activity
                     break;
             }
         }
     };
 
-    private class ViewHolder {
-
-        public TextView time;
-        public ToggleButton onOff;
+    private void resetRealm() {
+        RealmConfiguration realmConfig = new RealmConfiguration
+                .Builder(this)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.deleteRealm(realmConfig);
     }
 
-
-    private class ListViewAdapter extends BaseAdapter {
-
-        private Context mContext = null;
-        private ArrayList<AlarmListData> mListData = new ArrayList<AlarmListData>();
-
-        public ListViewAdapter(Context mContext) {
-            super();
-            this.mContext = mContext;
-        }
-
-        @Override
-        public int getCount() {
-            return mListData.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mListData.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder;
-
-            if (convertView == null) {
-
-                holder = new ViewHolder();
-
-                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.list_alarms, null);
-
-                holder.time = (TextView) convertView.findViewById(R.id.list_time);
-                holder.onOff = (ToggleButton) convertView.findViewById(R.id.list_switch);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            AlarmListData mData = mListData.get(position);
-
-            holder.time.setText(mData.time);
-            holder.onOff.setChecked(mData.onOff);
-
-            return convertView;
-        }
-
-    }
 }
