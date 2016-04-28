@@ -1,40 +1,16 @@
 package net.teamsv.selfalarm.database;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-
 import java.util.Date;
 
-/**
- * Created by Nolsigan on 16. 4. 21..
- */
+import io.realm.RealmObject;
 
-@Table(name = "Alarms")
-public class Alarm extends Model{
+public class Alarm extends RealmObject {
 
-    /* attributes */
+    private Date date;
+    private Record record;
 
-    @Column(name = "Name", unique = true)
-    public String name;
-
-    @Column(name = "Path")
-    public String path;
-
-    @Column(name = "Created_at", index = true)
-    public Date created_at;
-
-
-    /* constructors */
-
-    public Alarm() {
-        super();
-    }
-
-    public Alarm(String name, String path) {
-        super();
-        this.name = name;
-        this.path = path;
-    }
-
+    public void setDate(Date in) { date = in; }
+    public void setRecord(Record in) { record = in; }
+    public Date getDate() { return date; }
+    public Record getRecord() { return record; }
 }
