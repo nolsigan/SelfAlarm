@@ -12,6 +12,7 @@ public class Alarm extends RealmObject {
     /* set funcs */
     public void setTime(int h, int m) { hour = h; minute = m; }
     public void setRecord(Record in) { record = in; }
+    //public void setRecord() { } // Select random alarm
     public void setOnoff(boolean in) { onOff = in; }
 
     /* get funcs */

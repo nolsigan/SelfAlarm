@@ -2,6 +2,7 @@ package net.teamsv.selfalarm;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import net.teamsv.selfalarm.database.Alarm;
-
-import java.text.SimpleDateFormat;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
@@ -84,9 +83,7 @@ public class MyAlarmsActivity extends Activity {
         @Override
         public void onBindRealmViewHolder(ViewHolder viewHolder, int pos) {
             final Alarm alarm = realmResults.get(pos);
-
-            SimpleDateFormat transFormat = new SimpleDateFormat("MM-dd HH:mm");
-            final String strDate = transFormat.format(alarm.getDate());
+            final String strDate = alarm.getTime();
 
             viewHolder.alarmTime.setText(strDate);
             viewHolder.tButton.setChecked(alarm.getOnoff());
@@ -99,7 +96,10 @@ public class MyAlarmsActivity extends Activity {
 
             switch (v.getId()) {
                 case R.id.btn_new:
-                    // TODO : intent to new alarm activity
+
+                    Intent intent = new Intent(MyAlarmsActivity.this, NewAlarmActivity.class);
+
+                    startActivity(intent);
                     break;
 
                 case R.id.btn_record:
