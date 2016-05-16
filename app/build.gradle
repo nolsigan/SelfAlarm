@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "net.teamsv.selfalarm"
-        minSdkVersion 12
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -29,4 +29,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.github.thorbenprimke:realm-recyclerview:0.9.15'
+    compile 'com.beardedhen:androidbootstrap:2.2.0'
 }

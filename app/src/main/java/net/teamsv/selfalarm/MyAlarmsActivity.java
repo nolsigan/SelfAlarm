@@ -1,6 +1,8 @@
 package net.teamsv.selfalarm;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import net.teamsv.selfalarm.database.Alarm;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
 import io.realm.Realm;
@@ -100,6 +106,7 @@ public class MyAlarmsActivity extends Activity {
             viewHolder.alarmTime.setText(strDate);
             viewHolder.tButton.setChecked(alarm.getOnoff());
 
+
             viewHolder.tButton.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
@@ -109,11 +116,15 @@ public class MyAlarmsActivity extends Activity {
                         realm.beginTransaction();
                         alarm.setOnoff(true);
                         realm.commitTransaction();
+
+                        setAlarm(alarm.getHour(), alarm.getMinute(), alarm.getId());
                     } else {
 
                         realm.beginTransaction();
                         alarm.setOnoff(false);
                         realm.commitTransaction();
+
+                        cancelAlarm(alarm.getId());
                     }
                 }
             });
@@ -126,17 +137,58 @@ public class MyAlarmsActivity extends Activity {
 
             switch (v.getId()) {
                 case R.id.btn_new: {
+                    Toast.makeText(getApplicationContext(), "fuck!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MyAlarmsActivity.this, NewAlarmActivity.class);
 
                     startActivity(intent);
                     break;
                 }
                 case R.id.btn_record: {
-                    // TODO : intent to new record activity
+                    Intent intent = new Intent(MyAlarmsActivity.this, NewRecordActivity.class);
+
+                    startActivity(intent);
                     break;
                 }
             }
         }
     };
+
+    /* set alarm */
+    private void setAlarm(int hour, int minute, int alarm_id) {
+
+        /* calculate time diff */
+
+        Calendar c = Calendar.getInstance();
+        Date curDate = c.getTime();
+
+        int curH = curDate.getHours();
+        int curM = curDate.getMinutes();
+        int calM = (hour - curH) * 60 + minute - curM;
+
+
+        if (curH * 60 + curM > hour * 60 + minute) calM = 24 * 60 - calM;
+
+
+        /* set alarm */
+
+        AlarmManager aManage = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        aManage.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis() + calM * 60 * 1000, pendingIntent(alarm_id));
+    }
+
+    /* reset alarm */
+    private void cancelAlarm(int alarm_id) {
+
+        AlarmManager aManage = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        aManage.cancel(pendingIntent(alarm_id));
+    }
+
+    /* set pending intent */
+    private PendingIntent pendingIntent(int alarm_id) {
+
+        Intent i = new Intent(getApplicationContext(), MyAlarmsActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, alarm_id, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        return pi;
+    }
 
 }

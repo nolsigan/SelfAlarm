@@ -35,14 +35,43 @@
         android:layout_width="0px"
         android:layout_height="fill_parent"
         android:layout_weight="216"/>
-
-
-
-    <!--<ImageButton-->
-    <!--android:id="@+id/btn_top_02"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_width="38dp"-->
-    <!--android:layout_height="38dp"-->
-    <!--android:background="@mipmap/recent"/>-->
-
 </LinearLayout>
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
+    <!--android:id="@+id/btn_record"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Record"-->
+    <!--app:bootstrapBrand="success"-->
+    <!--app:bootstrapSize="lg"-->
+    <!--app:buttonMode="regular"-->
+    <!--app:showOutline="false"-->
+    <!--app:roundedCorners="true"-->
+    <!--android:layout_margin="10dp"-->
+    <!--/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="0px"-->
+    <!--android:layout_height="fill_parent"-->
+    <!--android:layout_weight="554"/>-->
+
+    <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
+    <!--android:id="@+id/btn_new"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Register"-->
+    <!--app:bootstrapBrand="secondary"-->
+    <!--app:bootstrapSize="lg"-->
+    <!--app:buttonMode="regular"-->
+    <!--app:showOutline="false"-->
+    <!--app:roundedCorners="true"-->
+    <!--android:layout_margin="10dp"-->
+    <!--/>-->
+
+    <!--</LinearLayout>-->
